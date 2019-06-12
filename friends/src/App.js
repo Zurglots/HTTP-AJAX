@@ -1,8 +1,9 @@
 import React, { Component } from "react";
+import { Route } from "react-router-dom";
+import FriendsList from "./FriendsList";
 import "./App.css";
-import axios from "axios";
 
-class App extends Component {
+export default class App extends Component {
   constructor() {
     super();
     this.state = {
@@ -10,22 +11,17 @@ class App extends Component {
     };
   }
 
-  componentDidMount() {
-    axios
-      .get("http://localhost:5000/friends")
-      .then(response => {
-        this.setState(() => ({ data: response.data }));
-        console.log(this.state.data);
-      })
-      .catch(error => {
-        console.error("Server Error", error);
-      });
-  }
-
   render() {
     // console.log(this.state.friends);
-    return <div>A div</div>;
+    return (
+      <div className="friend-list">
+        <Route exact path="/" component={FriendsList} />
+        {/* <Route
+          exact
+          path="/"
+          render={props => <FriendsList {...props} friends={this.state.data} />}
+        /> */}
+      </div>
+    );
   }
 }
-
-export default App;
