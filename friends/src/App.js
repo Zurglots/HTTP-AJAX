@@ -24,6 +24,17 @@ export default class App extends Component {
       });
   }
 
+  addFriend = friend => {
+    axios
+      .post("http://localhost:5000/friends", friend)
+      .then(response => {
+        this.setState({
+          friends: response.data
+        });
+      })
+      .catch(err => console.log(err));
+  };
+
   render() {
     // console.log(this.state.friends);
     return (
@@ -32,7 +43,11 @@ export default class App extends Component {
           exact
           path="/"
           render={props => (
-            <FriendsList {...props} friends={this.state.friends} />
+            <FriendsList
+              {...props}
+              friends={this.state.friends}
+              addFriend={this.addFriend}
+            />
           )}
         />
         {/* <Route
