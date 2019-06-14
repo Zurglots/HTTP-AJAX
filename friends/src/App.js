@@ -1,22 +1,24 @@
 import React, { Component } from "react";
-import { Route } from "react-router-dom";
-import FriendsList from "./FriendsList";
+import { Route, withRouter } from "react-router-dom";
 import axios from "axios";
+
+import Nav from "./Nav";
+import FriendsList from "./FriendsList";
+// import Friend from "./Friend";
+import FriendForm from "./FriendForm";
+
 import "./App.css";
 
-export default class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      friends: []
-    };
-  }
+class App extends Component {
+  state = {
+    friends: []
+  };
 
   componentDidMount() {
     axios
       .get("http://localhost:5000/friends")
-      .then(response => {
-        this.setState(() => ({ friends: response.data }));
+      .then(res => {
+        this.setState({ friends: res.data });
         console.log(this.state.friends);
       })
       .catch(error => {
@@ -27,29 +29,36 @@ export default class App extends Component {
   addFriend = friend => {
     axios
       .post("http://localhost:5000/friends", friend)
-      .then(response => {
+      .then(res => {
         this.setState({
-          friends: response.data
+          friends: res.data
         });
       })
       .catch(err => console.log(err));
   };
 
   render() {
-    // console.log(this.state.friends);
+    console.log(this.props);
     return (
       <div className="friend-list">
+        <Nav />
         <Route
           exact
           path="/"
           render={props => (
-            <FriendsList
-              {...props}
-              friends={this.state.friends}
-              addFriend={this.addFriend}
-            />
+            <FriendsList {...props} friends={this.state.friends} />
           )}
         />
+        <Route
+          exact
+          path="/add-friend"
+          render={props => <FriendForm {...props} addFriend={this.addFriend} />}
+        />
+        {/* <Route
+          exact
+          path="/add-friend/:id"
+          render={props => <Friend {...props} friends={this.state.friends} />}
+        /> */}
         {/* <Route
           exact
           path="/"
@@ -59,3 +68,5 @@ export default class App extends Component {
     );
   }
 }
+
+export default withRouter(App);
